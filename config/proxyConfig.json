@@ -1,0 +1,69 @@
+{
+    "server": {
+        "http_port": 8080,
+        "websocket_enabled": true,
+        "websocket_port": 8081
+    },
+    "security": {
+        "ssl_enabled": true,
+        "ssl_cert_path": "/etc/ssl/certs/fullchain.pem",
+        "ssl_key_path": "/etc/ssl/private/privkey.pem",
+        "jwt_auth_enabled": true,
+        "jwt_secret": "your_jwt_secret",
+        "cors": {
+            "allowed_origins": [
+                "https://example.com",
+                "https://another-example.com"
+            ]
+        },
+        "ip_whitelist": [
+            "192.168.1.0/24"
+        ]
+    },
+    "performance": {
+        "rate_limit": 100,
+        "rate_window_seconds": 60,
+        "gzip_enabled": true
+    },
+    "cache": {
+        "redis_host": "localhost",
+        "redis_port": 6379,
+        "redis_password": "your_redis_password"
+    },
+    "routes": [
+        {
+            "path_prefix": "/api",
+            "websocket_enabled": false,
+            "cache_enabled": true,
+            "cache_ttl_seconds": 300,
+            "backends": [
+                {
+                    "name": "backend1",
+                    "host": "192.168.1.101",
+                    "port": 8080,
+                    "weight": 1
+                },
+                {
+                    "name": "backend2",
+                    "host": "192.168.1.102",
+                    "port": 8080,
+                    "weight": 2
+                }
+            ]
+        },
+        {
+            "path_prefix": "/static",
+            "websocket_enabled": false,
+            "cache_enabled": true,
+            "cache_ttl_seconds": 600,
+            "backends": [
+                {
+                    "name": "static_backend",
+                    "host": "192.168.1.103",
+                    "port": 8080,
+                    "weight": 1
+                }
+            ]
+        }
+    ]
+}

@@ -23,7 +23,10 @@ Logger &Logger::getInstance()
 void Logger::init(const std::string &logDir, Level minLevel)
 {
     std::cout << "Intializing the logger" << std::endl;
+
+    // locks the mutex and unlock it when it goes out of scope
     std::lock_guard<std::mutex> lock(logMutex_);
+
     minLevel_ = minLevel;
     logDir_ = logDir;
     ensureLogDirectoryExists();
@@ -87,6 +90,7 @@ void Logger::flush()
     {
         if (file.is_open())
         {
+    // Flush the file stream ( buffer ) to ensure all data is written to the file 
             file.flush();
         }
     }

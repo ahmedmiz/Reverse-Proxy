@@ -1,17 +1,37 @@
-# Reverse Proxy Project
+# Modern C++ API Gateway
 
-## Overview
+A high-performance API Gateway built in C++ that provides routing, security, and real-time communication capabilities.
 
-This project implements a reverse proxy server designed to handle HTTP requests, load balancing, and security features such as authentication and SSL. It also includes a configuration module and unit tests to ensure reliability.
+## Key Features
 
-## Features
+- **Dynamic Routing & Load Balancing** - Intelligent request routing with automatic failover
+- **Security & Authentication** - JWT validation, IP filtering, SSL termination, and CORS support
+- **Performance Optimization** - Response compression and client rate limiting
+- **WebSocket Support** - Bidirectional real-time proxy capabilities
+- **Monitoring & Observability** - Comprehensive logging and performance metrics
 
-- **HTTP Server**: Handles incoming HTTP requests and responses.
-- **Load Balancer**: Distributes traffic across multiple backend servers.
-- **Security**: Includes JWT-based authentication and SSL support.
-- **Logging and Error Handling**: Provides robust logging and error management.
-- **Configuration**: Modular configuration system for easy customization.
-- **Unit Tests**: Comprehensive tests for critical components.
+## Tech Stack
+
+- **Core**: C++17, Boost.Asio
+- **Security**: OpenSSL, JWT authentication
+- **Data Handling**: JsonCpp
+- **Performance**: Redis for caching and rate limiting
+- **Networking**: WebSocket++, libcurl
+- **Build System**: CMake
+
+## Architecture Overview
+
+See the detailed [Architecture Documentation](doc/doc.md) for a complete overview of the system design and component interactions.
+
+## Design Decisions
+
+See the detailed [Design Decisisons](doc/design-decisions.md) for a complete
+overview of why each Design Decision was taken.
+
+## Code Organization
+
+See the detailed [Code Organization](doc/code-organization.md) for a complete
+overview of the structure of the porject.
 
 ## Build Instructions
 
@@ -30,23 +50,34 @@ This project implements a reverse proxy server designed to handle HTTP requests,
    cd RP
    ```
 
-2. Create a build directory:
+2. Build the project using the build script:
 
    ```bash
-   mkdir build_Debug
+   # Build in Debug mode (default)
+   ./build.sh
+   
+   # Or build in Release mode
+   ./build.sh Release
+   ```
+
+3. Run the project:
+
+   ```bash
+   # Navigate to build directory
+   cd build_Debug    # or build_Release if built in Release mode
+   
+   # Run the reverse proxy
+   ./bin/reverse_proxy
+   ```
+
+4. Run tests (optional):
+
+   ```bash
+   # Either way works:
+   ./build.sh test   # Run tests directly
+   # OR
    cd build_Debug
-   ```
-
-3. Configure the project:
-
-   ```bash
-   cmake -DCMAKE_BUILD_TYPE=Debug ..
-   ```
-
-4. Build the project:
-
-   ```bash
-   make
+   ctest -V         # Run tests from build directory
    ```
 
 ## Usage
@@ -83,10 +114,11 @@ Contributions are welcome! Please follow these steps:
 3. Commit your changes.
 4. Submit a pull request.
 
-## License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
-
 ## Contact
 
-For questions or feedback, please contact the project maintainer.
+For questions or feedback, please contact:
+
+Name: Ahmed Saad
+Email: <mizoahmed017@gmail.com>
+
+GitHub: ahmedmiz

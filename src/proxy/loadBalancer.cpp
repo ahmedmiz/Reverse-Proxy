@@ -34,7 +34,7 @@ void LoadBalancer::set_backend_health(const std::string& route_prefix,
     
     Logger::getInstance().info(
         "Backend " + backend_name + " for route " + route_prefix + 
-        " marked as " + (healthy ? "healthy" : "unhealthy"), "LoadBalancer");
+        " marked as " + (healthy ? "healthy" : "unhealthy"), "LoadBalancer.cpp");
 }
 
 void LoadBalancer::start_health_checks() {
@@ -49,12 +49,12 @@ void LoadBalancer::start_health_checks() {
         this->health_check_worker();
     }).detach();
     
-    Logger::getInstance().info("Health check worker started", "LoadBalancer");
+    Logger::getInstance().info("Health check worker started", "LoadBalancer.cpp");
 }
 
 void LoadBalancer::stop_health_checks() {
     running_health_checks_ = false;
-    Logger::getInstance().info("Health check worker stopping", "LoadBalancer");
+    Logger::getInstance().info("Health check worker stopping", "LoadBalancer.cpp");
 }
 
 const BackendServer* LoadBalancer::select_round_robin(const RouteConfig& route) {
@@ -63,7 +63,7 @@ const BackendServer* LoadBalancer::select_round_robin(const RouteConfig& route) 
     auto healthy_backends = get_healthy_backends(route);
     if (healthy_backends.empty()) {
         Logger::getInstance().error(
-            "No healthy backends available for route " + route.path_prefix, "LoadBalancer");
+            "No healthy backends available for route " + route.path_prefix, "LoadBalancer.cpp");
         return nullptr;
     }
     
@@ -85,7 +85,7 @@ const BackendServer* LoadBalancer::select_weighted_random(const RouteConfig& rou
     auto healthy_backends = get_healthy_backends(route);
     if (healthy_backends.empty()) {
         Logger::getInstance().error(
-            "No healthy backends available for route " + route.path_prefix, "LoadBalancer");
+            "No healthy backends available for route " + route.path_prefix, "LoadBalancer.cpp");
         return nullptr;
     }
     
@@ -128,7 +128,7 @@ std::vector<const BackendServer*> LoadBalancer::get_healthy_backends(const Route
 
 void LoadBalancer::health_check_worker() {
     while (running_health_checks_) {
-        Logger::getInstance().debug("Running health checks", "LoadBalancer");
+        Logger::getInstance().debug("Running health checks", "LoadBalancer.cpp");
         
         // Check all backends for all routes
         for (const auto& route : config_.get_routes()) {
@@ -143,7 +143,7 @@ void LoadBalancer::health_check_worker() {
                     Logger::getInstance().info(
                         "Backend " + backend.name + " for route " + route.path_prefix + 
                         " changed state from " + (was_healthy ? "healthy" : "unhealthy") + 
-                        " to " + (is_healthy ? "healthy" : "unhealthy"), "LoadBalancer");
+                        " to " + (is_healthy ? "healthy" : "unhealthy"), "LoadBalancer.cpp");
                 }
                 
                 health_status_[route.path_prefix][backend.name] = is_healthy;
@@ -158,7 +158,7 @@ void LoadBalancer::health_check_worker() {
 bool LoadBalancer::check_backend_health(const BackendServer& backend) {
     CURL* curl = curl_easy_init();
     if (!curl) {
-        Logger::getInstance().error("Failed to initialize CURL for health check", "LoadBalancer");
+        Logger::getInstance().error("Failed to initialize CURL for health check", "LoadBalancer.cpp");
         return false;
     }
     

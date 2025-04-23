@@ -15,13 +15,14 @@ HttpServer::HttpServer(boost::asio::io_context& io_context, int port,
 
 void HttpServer::start() {
     if (running_) {
+        std::cout << "server is running..." << std:: endl ; 
         return;
     }
     
     running_ = true;
     start_accept();
     Logger::getInstance().info("HTTP server started and listening on port " + 
-                               std::to_string(acceptor_.local_endpoint().port()), "HttpServer");
+                               std::to_string(acceptor_.local_endpoint().port()), "HttpServer.cpp");
 }
 
 void HttpServer::stop() {
@@ -36,10 +37,10 @@ void HttpServer::stop() {
     acceptor_.close(ec);
     
     if (ec) {
-        Logger::getInstance().error("Error closing acceptor: " + ec.message(), "HttpServer");
+        Logger::getInstance().error("Error closing acceptor: " + ec.message(), "HttpServer.cpp");
     }
     
-    Logger::getInstance().info("HTTP server stopped", "HttpServer");
+    Logger::getInstance().info("HTTP server stopped", "HttpServer.cpp");
 }
 
 void HttpServer::start_accept() {
@@ -58,14 +59,14 @@ void HttpServer::start_accept() {
 void HttpServer::handle_accept(std::shared_ptr<boost::asio::ip::tcp::socket> socket,
                               const boost::system::error_code& error) {
     if (error) {
-        Logger::getInstance().error("Error accepting connection: " + error.message(), "HttpServer");
+        Logger::getInstance().error("Error accepting connection: " + error.message(), "HttpServer.cpp");
     } else {
         // Handle the connection in a separate thread
         std::thread([this, socket]() {
             try {
                 handle_connection(socket);
             } catch (const std::exception& e) {
-                Logger::getInstance().error("Exception handling connection: " + std::string(e.what()), "HttpServer");
+                Logger::getInstance().error("Exception handling connection: " + std::string(e.what()), "HttpServer.cpp");
             }
         }).detach();
     }
@@ -80,7 +81,7 @@ void HttpServer::handle_connection(std::shared_ptr<boost::asio::ip::tcp::socket>
         
         // Get client info for logging
         std::string client_ip = socket->remote_endpoint().address().to_string();
-        Logger::getInstance().debug("New connection from " + client_ip, "HttpServer");
+        Logger::getInstance().debug("New connection from " + client_ip, "HttpServer.cpp");
         
         // Buffer for incoming data
         char buffer[8192];
@@ -108,7 +109,7 @@ void HttpServer::handle_connection(std::shared_ptr<boost::asio::ip::tcp::socket>
         // Parse the request
         HttpRequestPtr request = parse_request(data);
         if (!request) {
-            Logger::getInstance().error("Failed to parse HTTP request", "HttpServer");
+            Logger::getInstance().error("Failed to parse HTTP request", "HttpServer.cpp");
             socket->close();
             return;
         }
@@ -169,10 +170,10 @@ void HttpServer::handle_connection(std::shared_ptr<boost::asio::ip::tcp::socket>
         // Close the connection
         socket->close();
         
-        Logger::getInstance().debug("Connection from " + client_ip + " handled successfully", "HttpServer");
+        Logger::getInstance().debug("Connection from " + client_ip + " handled successfully", "HttpServer.cpp");
     }
     catch (const std::exception& e) {
-        Logger::getInstance().error("Exception in connection handler: " + std::string(e.what()), "HttpServer");
+        Logger::getInstance().error("Exception in connection handler: " + std::string(e.what()), "HttpServer.cpp");
         try {
             // Try to send an error response
             auto response = std::make_shared<HttpResponse>(HttpStatus::INTERNAL_SERVER_ERROR);

@@ -20,10 +20,10 @@ void signal_handler(int signal) {
 
 int main(int argc, char* argv[]) {
     try {
-        // parse command line arguments
-        std::string config_path = "config/proxyConfig.json";
+
+        std::string config_path = "../../config/proxyConfig.json";
         if (argc > 1) {
-            // manually set config path
+
             config_path = argv[1];
         }
 
@@ -42,7 +42,8 @@ int main(int argc, char* argv[]) {
             return 1;
         }
 
-        // Create IO context
+
+        // io_context = Async task manager
         // it is like event dispatcher waits for events then calls the right handler function
         boost::asio::io_context io_context;
 
@@ -51,7 +52,7 @@ int main(int argc, char* argv[]) {
         auto proxy_handler = std::make_shared<ProxyHandler>(config, io_context);
         
         // initialize HTTP server
-        HttpServer server(io_context, config.get_http_port(), proxy_handler);
+        HttpServer HttpServer(io_context, config.get_http_port(), proxy_handler);
         
         // Initialize WebSocket server if enabled
         // std::unique_ptr<WebSocketServer> ws_server;
@@ -63,25 +64,36 @@ int main(int argc, char* argv[]) {
         // }
 
         // Start servers
-        server.start();
+        HttpServer.start();
         // if (ws_server) {
         //     ws_server->start();
         // }
 
-        Logger::getInstance().info("Reverse proxy started on HTTP port " + std::to_string(config.get_http_port()), "main.cpp");
+
         // if (ws_server) {
         //     Logger::getInstance().info("WebSocket server started on port " + std::to_string(config.get_websocket_port()), "main.cpp");
         // }
 
         // Create thread pool for the IO context
-        unsigned int num_threads = std::thread::hardware_concurrency();
+        // Cap threads to physical cores for better performance
+        unsigned int num_threads = std::max(1u,std::thread::hardware_concurrency());
         std::vector<std::thread> threads;
         for (unsigned int i = 0; i < num_threads; ++i) {
             threads.emplace_back([&io_context]() {
                 io_context.run();
             });
         }
-
+       /*
+       
+                ┌──────────────────┐        ┌──────────────────┐
+                │    Main Thread   │        │  Worker Threads  │
+                ├──────────────────┤        ├──────────────────┤
+                │  - Signal Watch  │        │  - Request       │
+                │  - Shutdown Ctrl │◀──────▶│    Processing    │
+                │  - Thread Mgmt   │        │  - Async I/O     │
+                └──────────────────┘        └──────────────────┘
+       
+       */
         // Wait for shutdown signal
         while (running) {
             std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -89,7 +101,7 @@ int main(int argc, char* argv[]) {
 
         // Graceful shutdown
         Logger::getInstance().info("Shutting down servers...", "main.cpp");
-        server.stop();
+        HttpServer.stop();
         // if (ws_server) {
         //     ws_server->stop();
         // }

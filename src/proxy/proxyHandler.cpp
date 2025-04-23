@@ -66,7 +66,7 @@ ProxyHandler::ProxyHandler(Config& config, boost::asio::io_context& io_context)
     // Initialize authentication
     if (config.is_jwt_auth_enabled()) {
         auth_ = std::make_unique<Authentication>(config);
-        Logger::getInstance().info("JWT authentication enabled");
+        Logger::getInstance().info("JWT authentication enabled","proxyHandler.cpp");
     }
     
     // Initialize Redis client if needed
@@ -76,16 +76,16 @@ ProxyHandler::ProxyHandler(Config& config, boost::asio::io_context& io_context)
             config.get_redis_port(),
             config.get_redis_password()
         );
-        Logger::getInstance().info("Redis client initialized");
+        Logger::getInstance().info("Redis client initialized","proxyHandler.cpp");
     }
     
     // Initialize load balancer
     load_balancer_ = std::make_unique<LoadBalancer>(config);
-    Logger::getInstance().info("Load balancer initialized");
+    Logger::getInstance().info("Load balancer initialized","proxyHandler.cpp");
     
     // Initialize CURL
     curl_global_init(CURL_GLOBAL_ALL);
-    Logger::getInstance().info("CURL initialized");
+    Logger::getInstance().info("CURL initialized","proxyHandler.cpp");
 }
 
 HttpResponsePtr ProxyHandler::handle_request(HttpRequestPtr request, const std::string& client_ip) {

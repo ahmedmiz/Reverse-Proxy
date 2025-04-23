@@ -5,9 +5,9 @@ BUILD_TYPE=${1:-Debug}
 BUILD_DIR="build_${BUILD_TYPE}"
 
 if [ "$1" == "test" ]; then
-    if [ -d "$BUILD_DIR" ]; then
+    if [ -d "build_debug_test" ]; then
         echo "Running tests in $BUILD_DIR..."
-        cd $BUILD_DIR
+        cd "build_debug_test"
         ctest -V
         exit 0
     else

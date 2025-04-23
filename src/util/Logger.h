@@ -22,10 +22,13 @@ public:
         ERROR,
         CRITICAL
     };
-
+    // singleton instance return it by reference 
     static Logger& getInstance();
+    // Prevent accidental copying of the singleton.
     Logger(const Logger&) = delete;
+    // Prevent assignment of the singleton.
     Logger& operator=(const Logger&) = delete;
+    
 
     void init(const std::string& logDir = "logs", Level minLevel = Level::INFO);
     void log(Level level, const std::string& message, const std::string& source = "");

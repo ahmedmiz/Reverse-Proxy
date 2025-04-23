@@ -21,7 +21,7 @@ A high-performance API Gateway built in C++ that provides routing, security, and
 
 ## Architecture Overview
 
-See the detailed [Architecture Documentation](doc/doc.md) for a complete overview of the system design and component interactions.
+See the detailed [Architecture Documentation](doc/architecture-documentation.md) for a complete overview of the system design and component interactions.
 
 ## Design Decisions
 

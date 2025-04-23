@@ -34,3 +34,7 @@ lib/
 # Test output
 Testing/
 test_config
+
+
+run.sh
+doc/doc.md

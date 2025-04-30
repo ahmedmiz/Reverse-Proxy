@@ -28,9 +28,11 @@ find_package(Threads REQUIRED)
 
 # Update jsoncpp library path
 find_library(JSONCPP_LIB jsoncpp HINTS /opt/homebrew/opt/jsoncpp/lib)
-
+ set(ZLIB_ROOT /opt/homebrew/opt/zlib)
+    set(ZLIB_INCLUDE_DIR ${ZLIB_ROOT}/include)
+    set(ZLIB_LIBRARY ${ZLIB_ROOT}/lib/libz.dylib)
 find_package(Boost REQUIRED)
-
+find_package(ZLIB REQUIRED)
 # Uncomment and find OpenSSL
 find_package(OpenSSL REQUIRED)
 if(NOT OpenSSL_FOUND)

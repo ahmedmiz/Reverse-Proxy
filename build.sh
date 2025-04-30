@@ -21,7 +21,7 @@ mkdir -p $BUILD_DIR 2>/dev/null
 cd $BUILD_DIR
 
 # Configure via CMake
-cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE .. >/dev/null 2>&1 || {
+cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..  || {
     echo "Error: CMake configuration failed."
     exit 1
 }
